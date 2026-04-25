@@ -1,6 +1,8 @@
 # ⚗️ PharmaLens AI — Pharmacy Pricing Intelligence Platform
 
-A full-stack business intelligence dashboard that helps pharmacy owners price competitively, detect margin gaps, and design optimal discount strategies using RxNav-powered drug intelligence.
+A full-stack business intelligence dashboard that helps pharmacy owners price competitively, detect margin gaps, and design optimal discount strategies using RxNav-powered drug intelligence and Groq LLaMA 3.3 AI.
+
+**Live Demo:** [Frontend on Vercel](https://pharmalens-ai.vercel.app) · **API:** [Backend on Render](https://pharmalens-ai.onrender.com)
 
 ---
 
@@ -12,7 +14,7 @@ Small pharmacies sell the same medicines as large chains (CVS, Walgreens, Walmar
 - What generic alternatives could save their customers money
 - What pricing strategy maximizes both volume and margin
 
-**PharmaLens AI solves this with 4 specialized AI agents and a real drug intelligence layer.**
+**PharmaLens AI solves this with 4 specialized AI agents powered by Groq LLaMA 3.3 and a real drug intelligence layer.**
 
 ---
 
@@ -47,27 +49,70 @@ PharmaLens AI uses **deterministic price simulation** — prices are computed fr
 | **Generic Substitution Agent** | Estimates savings from brand → generic switch |
 | **Margin Optimization Agent** | Suggests optimal price for target margin |
 | **Competitive Strategy Agent** | Recommends offer/bundle strategy |
-| **Orchestrator** | Combines all agents → final KEEP/REDUCE/RAISE/PROMOTE/BUNDLE decision |
+| **Groq Orchestrator** | Combines all agents → final KEEP/REDUCE/RAISE/PROMOTE/BUNDLE decision via LLaMA 3.3 70B |
+
+All AI inference runs on **Groq** using `llama-3.3-70b-versatile` — no fallbacks, no mock data.
 
 ---
 
-## 🚀 How to Run
+## 🏗️ Architecture
+
+```
+Browser (Vercel)
+    │
+    ├── GET /              → index.html (static)
+    ├── GET /static/*      → CSS / JS (static)
+    └── POST /api/*        → Vercel rewrite proxy
+                                │
+                                ▼
+                     Render (Flask + Gunicorn)
+                                │
+                     ┌──────────┴──────────┐
+                     ▼                     ▼
+               RxNav NLM API          Groq API
+               (drug data)        (LLaMA 3.3 70B)
+```
+
+- **Frontend** — Pure static HTML/CSS/JS on Vercel. Uses relative `/api/` URLs.
+- **Backend** — Flask on Render. All AI and drug data calls happen server-side.
+- **Proxy** — `vercel.json` rewrites `/api/*` to Render — zero CORS issues.
+
+---
+
+## 🚀 Local Development
 
 ```bash
-# 1. Clone / unzip the project
-cd pharmalens_ai
+# 1. Clone the repo
+git clone https://github.com/NM-code27/pharmalens-ai.git
+cd pharmalens-ai
 
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Copy env file (optional)
+# 3. Set environment variables
 cp .env.example .env
+# Edit .env and add your GROQ_API_KEY
 
 # 4. Run the app
 python app.py
 ```
 
 Open **http://localhost:5000** in your browser.
+
+---
+
+## ☁️ Deployment
+
+### Backend — Render (free)
+1. Connect repo on [render.com](https://render.com)
+2. Runtime: **Python 3**, Start Command: `gunicorn app:app`
+3. Set env var: `GROQ_API_KEY=your_key_here`
+
+### Frontend — Vercel (free)
+1. Import repo on [vercel.com/new](https://vercel.com/new)
+2. Framework: **Other**, Build Command: *(empty)*, Output: *(empty)*
+3. No env vars needed — API key lives on Render only
+4. Deploy — `vercel.json` handles the `/api/*` proxy automatically
 
 ---
 
@@ -88,34 +133,42 @@ Open **http://localhost:5000** in your browser.
 
 ```
 pharmalens_ai/
-├── app.py                     # Flask routes
+├── app.py                          # Flask routes + /api/chat endpoint
+├── index.html                      # Static root for Vercel
+├── vercel.json                     # Vercel proxy config → Render
+├── Procfile                        # gunicorn for Render
 ├── requirements.txt
 ├── README.md
 ├── .env.example
 ├── services/
-│   ├── rxnav_service.py       # RxNav API integration
-│   └── pricing_engine.py      # Deterministic competitor pricing
+│   ├── rxnav_service.py            # RxNav NLM API integration
+│   └── pricing_engine.py           # Deterministic competitor pricing
 ├── agents/
 │   ├── price_benchmark_agent.py
 │   ├── generic_substitution_agent.py
 │   ├── margin_optimization_agent.py
 │   ├── competitive_strategy_agent.py
-│   └── orchestrator.py
+│   └── orchestrator.py             # Groq LLaMA 3.3 orchestration + chat
 ├── templates/
-│   └── index.html             # SaaS dashboard
+│   └── index.html                  # Flask template (local dev)
 └── static/
-    ├── css/style.css
-    └── js/app.js
+    ├── css/style.css               # Dark glassmorphism UI
+    └── js/app.js                   # Async chatbot + chart rendering
 ```
 
 ---
 
 ## ⚙️ Tech Stack
 
-- **Backend**: Flask, Python, requests, python-dotenv
-- **Drug Data**: RxNav NLM API (free, no key)
-- **Frontend**: HTML, CSS, JavaScript, Chart.js
-- **Design**: Glassmorphism, dark theme, Syne + DM Mono fonts
+| Layer | Technology |
+|-------|-----------|
+| Backend | Flask, Python, Gunicorn |
+| AI | Groq API · LLaMA 3.3 70B Versatile |
+| Drug Data | RxNav NLM API (free, no key required) |
+| Frontend | HTML5, CSS3, Vanilla JS, Chart.js 4 |
+| Fonts | Syne, DM Mono, Inter (Google Fonts) |
+| Design | Dark glassmorphism, CSS custom properties |
+| Deploy | Render (backend) + Vercel (frontend) |
 
 ---
 
