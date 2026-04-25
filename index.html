@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaLens AI — Pharmacy Pricing Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">⚗️</div>
+    <div class="logo-text">
+      <span class="logo-main">PharmaLens</span>
+      <span class="logo-sub">AI Intelligence</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="#" class="nav-item active" data-section="command">
+      <span class="nav-icon">🎛️</span>
+      <span>Command Center</span>
+    </a>
+    <a href="#" class="nav-item" data-section="intelligence">
+      <span class="nav-icon">📊</span>
+      <span>Price Intelligence</span>
+    </a>
+    <a href="#" class="nav-item" data-section="competitor">
+      <span class="nav-icon">🗺️</span>
+      <span>Competitor Map</span>
+    </a>
+    <a href="#" class="nav-item" data-section="aiChat">
+      <span class="nav-icon">🤖</span>
+      <span>AI Chat Hub</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-status">
+    <div class="status-row">
+      <div class="status-dot-wrap">
+        <div class="badge-dot"></div>
+      </div>
+      <div class="status-info">
+        <span class="status-name">RxNav API</span>
+        <span class="status-state">Connected</span>
+      </div>
+    </div>
+    <div class="status-row" style="margin-top:8px">
+      <div class="status-dot-wrap">
+        <div class="badge-dot claude-dot"></div>
+      </div>
+      <div class="status-info">
+        <span class="status-name">Groq · LLaMA 3.3</span>
+        <span class="status-state">Active</span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+      <div class="topbar-breadcrumb">
+        <span class="breadcrumb-app">PharmaLens</span>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-page" id="breadcrumbPage">Command Center</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="status-pill">
+        <span class="status-dot-anim"></span>
+        <span>Live Market Data</span>
+      </div>
+      <div class="version-pill">v2.4.0</div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="command">
+    <div class="hero-bg-text">PHARMA</div>
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="hero-badge">🔬 AI-Powered Intelligence Engine</div>
+        <h1 class="hero-title">
+          Pharmacy Pricing<br>
+          <span class="gradient-text">Intelligence Engine</span>
+        </h1>
+        <p class="hero-subtitle">
+          Compare competitor prices, detect margin gaps, and unlock the best pricing strategy using multi-agent AI and real RxNav drug data.
+        </p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="hero-stat-num">6</span>
+            <span class="hero-stat-label">Pharmacies Tracked</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">4</span>
+            <span class="hero-stat-label">AI Agents</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">⚡</span>
+            <span class="hero-stat-label">Groq Powered</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="input-panel glass-card">
+          <div class="input-row">
+            <div class="input-group">
+              <label>💊 Drug Name</label>
+              <input type="text" id="drugInput" placeholder="e.g. Lipitor, Metformin..." autocomplete="off">
+            </div>
+            <div class="input-group">
+              <label>💰 Your Price ($)</label>
+              <input type="number" id="priceInput" placeholder="Auto-estimated" step="0.01" min="0">
+            </div>
+            <div class="input-group">
+              <label>📈 Target Margin (%)</label>
+              <input type="number" id="marginInput" placeholder="25" value="25" min="1" max="90">
+            </div>
+          </div>
+          <button class="analyze-btn" id="analyzeBtn" style="width:100%;margin-top:14px">
+            <span id="btnText">⚡ Analyze Pricing</span>
+            <span id="btnLoader" class="hidden">⏳ Analyzing...</span>
+          </button>
+          <div class="chips-row">
+            <span class="chips-label">Quick Fill:</span>
+            <button class="chip" data-drug="Lipitor" data-price="22.50">Lipitor</button>
+            <button class="chip" data-drug="Metformin" data-price="5.50">Metformin</button>
+            <button class="chip" data-drug="Ibuprofen" data-price="4.00">Ibuprofen</button>
+            <button class="chip" data-drug="Aspirin" data-price="3.50">Aspirin</button>
+            <button class="chip" data-drug="Amoxicillin" data-price="12.00">Amoxicillin</button>
+            <button class="chip" data-drug="Omeprazole" data-price="11.00">Omeprazole</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <div id="results" class="hidden">
+
+    <div class="drug-banner glass-card" id="drugStrip">
+      <div class="drug-banner-icon">💊</div>
+      <div class="drug-banner-items" id="drugBannerItems"></div>
+    </div>
+
+    <section class="kpi-section" id="intelligence">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Market Intelligence</h2>
+          <p class="section-desc">Real-time price analysis across 6 pharmacies</p>
+        </div>
+        <span class="section-tag">Live Analysis</span>
+      </div>
+      <div class="kpi-grid" id="kpiGrid"></div>
+    </section>
+
+    <section class="competitor-section" id="competitor">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Competitor Price Map</h2>
+          <p class="section-desc">6 pharmacies benchmarked</p>
+        </div>
+        <span class="section-tag">Benchmarked</span>
+      </div>
+      <div class="competitor-layout">
+        <div class="competitor-cards" id="competitorCards"></div>
+        <div class="chart-panel glass-card">
+          <div class="chart-header">
+            <span class="chart-title">Price Distribution</span>
+            <span class="chart-sub">Your Price · Competitors · Suggested</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="priceChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chat-section" id="aiChat">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">AI Intelligence Hub</h2>
+          <p class="section-desc">4 specialized agents · Groq-orchestrated recommendation · Follow-up Q&amp;A</p>
+        </div>
+        <span class="section-tag claude-tag">⚡ Groq · LLaMA 3.3</span>
+      </div>
+      <div class="chat-container glass-card">
+        <div class="chat-topbar">
+          <div class="chat-agents-row">
+            <div class="chat-agent-pill">📊 Price Benchmark</div>
+            <div class="chat-agent-pill">💊 Generic Substitution</div>
+            <div class="chat-agent-pill">📈 Margin Optimization</div>
+            <div class="chat-agent-pill">🧠 Competitive Strategy</div>
+            <div class="chat-agent-pill claude-pill">⚡ Groq LLaMA 3.3</div>
+          </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-empty" id="chatEmpty">
+            <div class="chat-empty-icon">🤖</div>
+            <p class="chat-empty-title">AI Intelligence Ready</p>
+            <p class="chat-empty-sub">Run an analysis above to see multi-agent insights and Groq LLaMA recommendations</p>
+          </div>
+        </div>
+        <div class="chat-input-row" id="chatInputRow">
+          <input type="text" id="chatInput" placeholder="Ask a follow-up question about this analysis..." disabled autocomplete="off">
+          <button class="chat-send-btn" id="chatSendBtn" disabled>
+            Ask AI <span class="send-arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div id="loadingOverlay" class="hidden">
+    <div class="loader-content">
+      <div class="loader-ring"></div>
+      <div class="loader-text">
+        <div class="loader-title">PharmaLens AI</div>
+        <div class="loader-steps" id="loaderSteps">
+          <div class="loader-step active">🔍 Querying RxNav drug database...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="errorToast" class="error-toast hidden">
+    <span class="error-icon">⚠️</span>
+    <span id="errorMsg">Something went wrong.</span>
+    <button onclick="document.getElementById('errorToast').classList.add('hidden')">✕</button>
+  </div>
+
+</main>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
